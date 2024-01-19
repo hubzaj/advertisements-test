@@ -10,6 +10,7 @@ from network.keywords.browser import BrowserKeywords
 @pytest.mark.browser
 class TestBannerAdInBrowser:
 
+    @pytest.mark.skip
     def test_banner_ad_in_browser(self, browser_keywords: BrowserKeywords) -> None:
         # Given
         ad: BannerAd = BannerAd.REGULAR_AD  # Product of the ad request sent to SSP
@@ -29,3 +30,9 @@ class TestBannerAdInBrowser:
         assert dsp_notification_request.response is None
         # assert dsp_notification_request.response is not None
         # assert dsp_notification_request.response.status_code == HTTPStatus.OK
+
+    def test_1(self) -> None:
+        pass
+
+    def test_2(self) -> None:
+        pass

@@ -9,5 +9,11 @@ spec:
       containers:
         - name: network
           image: {{ .Values.image.repository }}:{{ required "image.tag is required" .Values.image.tag }}
-          command: [ "pytest", "tests", "-n", "auto", "--template=html1/index.html", "--report=report.html", "-m", {{ .Values.test.group | quote }}]
+          command: [
+            "pytest",
+            "tests",
+            "-n", "auto",
+            "--template=html1/index.html", "--report=report.html",
+            "-m", {{ .Values.test.group | quote }}
+          ]
       restartPolicy: Never

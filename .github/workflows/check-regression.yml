@@ -1,0 +1,42 @@
+# This workflow will build and push docker image to the docker hub.
+
+name: Check regression
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: ${{ github.event.label.name == 'RUN_ALL_TESTS' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Gather runtime environment versions - asdf
+        uses: endorama/asdf-parse-tool-versions@v1
+        id: versions
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - uses: Gr1N/setup-poetry@v8
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - uses: browser-actions/setup-chrome@v1
+      - name: Run regression tests
+        run: |
+          poetry run pytest tests -n auto --template=html1/index.html --report=report.html
